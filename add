@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gợi ý Chart cho các chỉ sốsố</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .main-header {
+            background: linear-gradient(90deg, #8B5CF6, #EC4899);
+        }
+        .section-card {
+             background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .time-filter-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            background-color: white;
+            color: #4B5563;
+            border: 1px solid #D1D5DB;
+        }
+        .time-filter-btn.active {
+            background-color: #8B5CF6;
+            color: white;
+            border-color: #8B5CF6;
+            box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.39);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="main-header text-white p-6 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-bold">Gợi ý chart cho các chỉ số</h1>
+            <p class="mt-2 text-lg opacity-90"></p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+    
+        <!-- Time Filter Buttons -->
+        <section id="filters" class="mb-8 p-4 bg-white rounded-lg shadow-md">
+            <div class="flex flex-wrap justify-center items-center gap-4">
+                 <span class="font-semibold text-gray-700">Chọn khung thời gian:</span>
+                <button class="time-filter-btn" data-days="1">1 Ngày</button>
+                <button class="time-filter-btn" data-days="7">7 Ngày</button>
+                <button class="time-filter-btn" data-days="14">14 Ngày</button>
+                <button class="time-filter-btn active" data-days="30">30 Ngày</button>
+            </div>
+        </section>
+
+        <!-- Section 1: Customer Listening & Qualitative Insights (USP) -->
+        <section id="qualitative-insights" class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2 text-[#8B5CF6]">I. Tương tác với Sản phẩm của khách hàng</h2>
+            <p class="text-base md:text-lg mb-6 text-gray-600"></p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="kpi-card text-center">
+                    <h3 class="text-lg font-semibold text-gray-500">Điểm Đánh giá Trung bình</h3>
+                    <p class="text-5xl font-bold text-[#10B981] mt-2">4.85<span class="text-3xl">/5</span></p>
+                    <p class="text-sm text-gray-500 mt-1 font-semibold">(Từ trước đến nay)</p>
+                </div>
+                <div class="section-card lg:col-span-2">
+                     <h3 class="text-xl font-bold text-center mb-2">Phân bổ Đánh giá (Từ trước đến nay)</h3>
+                    <div class="chart-container" style="height: 200px;">
+                        <canvas id="ratingDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card mb-8">
+                 <h3 class="text-xl font-bold mb-1 text-center">Phân tích Sắc thái Thảo luận theo Chủ đề</h3>
+                 <p class="text-gray-600 mb-4 text-center">So sánh tỷ lệ phản hồi Tích cực, Tiêu cực, và Trung tính của khách hàng qua các chủ đề quan trọng.</p>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="sentimentAnalysisChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="section-card">
+                    <h3 class="text-xl font-bold mb-4">Từ khóa Nổi bật trong Reviews</h3>
+                    <div id="wordCloud" class="p-4 bg-gray-50 rounded-lg flex flex-wrap justify-center items-center gap-x-4 gap-y-2 min-h-[150px]"></div>
+                </div>
+                <div class="section-card">
+                    <h3 class="text-xl font-bold mb-4">Top 5 SP nhiều đánh giá nhất</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="topReviewedProductsChart"></canvas>
+                    </div>
+                </div>
+                 <div class="section-card">
+                     <h3 class="text-xl font-bold mb-4">Top 5 SP được yêu thích nhất (bỏ)</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="topLikedProductsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-8 section-card">
+                <h3 class="text-xl font-bold mb-4">Diễn biến Sắc thái theo Thời gian</h3>
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="sentimentOverTimeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Business Performance KPIs -->
+        <section id="performance" class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2 text-[#EC4899]">II. Hiệu suất Kinh doanh</h2>
+            <p class="text-base md:text-lg mb-6 text-gray-600">Các chỉ số cốt lõi phản ánh sức khỏe tài chính và quy mô hoạt động của cửa hàng.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="kpi-card text-center">
+                    <h3 class="text-lg font-semibold text-gray-500">Tổng Doanh số</h3>
+                    <p id="totalRevenue" class="text-5xl font-bold text-[#0891B2] mt-2">...</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="text-lg font-semibold text-gray-500">Tổng Lượt bán</h3>
+                    <p id="totalSales" class="text-5xl font-bold text-[#BE185D] mt-2">...</p>
+                </div>
+            </div>
+
+            <div class="mt-8 section-card">
+                <h3 class="text-xl font-bold mb-4">Xu hướng Doanh số và Lượt bán</h3>
+                <div class="chart-container">
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <div class="section-card">
+                    <h3 class="text-xl font-bold mb-4">Top 5 Sản phẩm Doanh số cao nhất</h3>
+                    <div class="chart-container">
+                        <canvas id="bizTopRevenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="section-card">
+                    <h3 class="text-xl font-bold mb-4">Top 5 Sản phẩm Bán chạy nhất</h3>
+                    <div class="chart-container">
+                        <canvas id="bizTopSalesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Operations & Inventory -->
+        <section id="operations">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2 text-[#D97706]">III. Giá & Khuyến mãi</h2>
+            <p class="text-base md:text-lg mb-6 text-gray-600">Tổng quan về chiến lược giá và các chương trình khuyến mãi đang áp dụng.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                 <div class="section-card lg:col-span-2">
+                    <h3 class="text-xl font-bold mb-4">Phân khúc Giá Sản phẩm</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="priceSegmentationChart"></canvas>
+                    </div>
+                </div>
+                <div class="section-card lg:col-span-3">
+                    <h3 class="text-xl font-bold mb-4">Số lượng SP đang khuyến mãi theo thời gian (Bỏ)</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="promoTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="mt-12 py-6 bg-gray-800 text-white">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 - Báo cáo được tạo bởi Gemini AI</p>
+            <p class="text-sm text-gray-400 mt-1">Dữ liệu được tổng hợp và phân tích cho mục đích minh họa.</p>
+        </div>
+    </footer>
+
+    <script>
+        const FONT_COLOR = '#1f2937';
+        const GRID_COLOR = '#e5e7eb';
+        const PALETTE = {
+            blue: '#0891B2', pink: '#DB2777', yellow: '#D97706',
+            purple: '#8B5CF6', green: '#10B981'
+        };
+
+        const chartDefaultOptions = {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: FONT_COLOR, font: { family: "'Be Vietnam Pro', sans-serif" } } },
+                tooltip: {
+                    enabled: true, mode: 'index', intersect: false,
+                    titleFont: { family: "'Be Vietnam Pro', sans-serif", weight: 'bold' },
+                    bodyFont: { family: "'Be Vietnam Pro', sans-serif" },
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    callbacks: { title: (tooltipItems) => {
+                        const item = tooltipItems[0];
+                        if (!item) return '';
+                        let label = item.chart.data.labels[item.dataIndex];
+                        return Array.isArray(label) ? label.join(' ') : label;
+                    }}
+                },
+                datalabels: { display: false }
+            },
+            scales: {
+                x: { ticks: { color: FONT_COLOR, font: { family: "'Be Vietnam Pro', sans-serif" } }, grid: { color: GRID_COLOR } },
+                y: { ticks: { color: FONT_COLOR, font: { family: "'Be Vietnam Pro', sans-serif" } }, grid: { color: GRID_COLOR } }
+            }
+        };
+
+        let masterData = [];
+        let charts = {};
+
+        function generateMockData() {
+            const products = [
+                { id: 1, name: 'Sữa Rửa Mặt', basePrice: 99, category: 'Chăm sóc da' },
+                { id: 2, name: 'Kem Chống Nắng', basePrice: 250, category: 'Chăm sóc da' },
+                { id: 3, name: 'Toner AHA/BHA', basePrice: 750, category: 'Chăm sóc da' },
+                { id: 4, name: 'Serum Vitamin C', basePrice: 400, category: 'Đặc trị' },
+                { id: 5, name: 'Mặt Nạ Giấy', basePrice: 25, category: 'Mặt nạ' },
+                { id: 6, name: 'Son Dưỡng Môi', basePrice: 150, category: 'Trang điểm' },
+                { id: 7, name: 'Nước hoa Niche', basePrice: 1800, category: 'Nước hoa' },
+                { id: 8, name: 'Máy Rửa Mặt', basePrice: 2500, category: 'Thiết bị' }
+            ];
+            const reviews = [
+                { keyword: 'giao hàng nhanh', sentiment: 'Tích cực', topic: 'Giao hàng', rating: 5 },
+                { keyword: 'chất lượng tốt', sentiment: 'Tích cực', topic: 'Chất lượng SP', rating: 5 },
+                { keyword: 'giá rẻ', sentiment: 'Tích cực', topic: 'Giá cả', rating: 4 },
+                { keyword: 'hàng giả', sentiment: 'Tiêu cực', topic: 'Chất lượng SP', rating: 1 },
+                { keyword: 'đóng gói cẩn thận', sentiment: 'Tích cực', topic: 'Giao hàng', rating: 5 },
+                { keyword: 'hỗ trợ nhiệt tình', sentiment: 'Tích cực', topic: 'CSKH', rating: 5 },
+                { keyword: 'chờ lâu', sentiment: 'Tiêu cực', topic: 'Giao hàng', rating: 2 },
+                { keyword: 'dùng thích', sentiment: 'Tích cực', topic: 'Chất lượng SP', rating: 5 },
+                { keyword: 'bình thường', sentiment: 'Trung tính', topic: 'Chất lượng SP', rating: 3 },
+            ];
+            const data = [];
+            let today = new Date();
+            for (let i = 0; i < 90; i++) {
+                let currentDate = new Date();
+                currentDate.setDate(today.getDate() - i);
+                
+                for (const product of products) {
+                    let dailySales = Math.floor(Math.random() * (i % 7 + 1) * 3 + 5);
+                    let dailyLikes = Math.floor(Math.random() * 10 + 1);
+                    let dailyReviews = Math.floor(Math.random() * 5);
+                    let promo = Math.random() > 0.6;
+                    
+                    data.push({
+                        date: currentDate, productId: product.id, name: product.name,
+                        sales: dailySales, revenue: dailySales * product.basePrice * 1000,
+                        likes: dailyLikes, reviewsCount: dailyReviews,
+                        price: product.basePrice, hasPromo: promo,
+                        reviewDetails: Array(dailyReviews).fill(0).map(() => reviews[Math.floor(Math.random() * reviews.length)])
+                    });
+                }
+            }
+            return data.sort((a,b) => a.date - b.date);
+        }
+
+        function updateDashboard(days) {
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(endDate.getDate() - (days - 1));
+            startDate.setHours(0, 0, 0, 0);
+            const filteredData = masterData.filter(d => d.date >= startDate && d.date <= endDate);
+
+            const totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+            const totalSales = filteredData.reduce((sum, item) => sum + item.sales, 0);
+            document.getElementById('totalRevenue').textContent = (totalRevenue / 1000).toLocaleString('vi-VN', { maximumFractionDigits: 0 }) + 'k';
+            document.getElementById('totalSales').textContent = totalSales.toLocaleString('vi-VN');
+
+            updateAllTimeCharts(); 
+            updateFilteredCharts(filteredData);
+        }
+        
+        function updateAllTimeCharts() {
+            const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            masterData.forEach(item => {
+                item.reviewDetails.forEach(r => ratingCounts[r.rating]++);
+            });
+            charts.ratingDistribution.data.datasets[0].data = Object.values(ratingCounts);
+            charts.ratingDistribution.update();
+        }
+
+        function updateFilteredCharts(data) {
+            updateRevenueTrendChart(data);
+            updateTopCharts(data, 'revenue', charts.topRevenue);
+            updateTopCharts(data, 'sales', charts.topSales);
+            updateQualitativeCharts(data);
+            updateOperationsCharts(data);
+        }
+
+        function updateRevenueTrendChart(data) {
+            const dailyData = {};
+            data.forEach(item => {
+                const dateStr = item.date.toLocaleDateString('vi-VN');
+                if (!dailyData[dateStr]) dailyData[dateStr] = { revenue: 0, sales: 0 };
+                dailyData[dateStr].revenue += item.revenue;
+                dailyData[dateStr].sales += item.sales;
+            });
+            charts.revenueTrend.data.labels = Object.keys(dailyData);
+            charts.revenueTrend.data.datasets[0].data = Object.values(dailyData).map(d => d.revenue);
+            charts.revenueTrend.data.datasets[1].data = Object.values(dailyData).map(d => d.sales);
+            charts.revenueTrend.update();
+        }
+        
+        function updateTopCharts(data, metric, chartInstance) {
+            const productSummary = {};
+            data.forEach(item => {
+                if (!productSummary[item.name]) productSummary[item.name] = { revenue: 0, sales: 0, reviewsCount: 0, likes: 0 };
+                productSummary[item.name].revenue += item.revenue;
+                productSummary[item.name].sales += item.sales;
+                productSummary[item.name].reviewsCount += item.reviewsCount;
+                productSummary[item.name].likes += item.likes;
+            });
+            const sorted = Object.entries(productSummary).sort((a, b) => b[1][metric] - a[1][metric]).slice(0, 5);
+            chartInstance.data.labels = sorted.map(item => item[0]);
+            chartInstance.data.datasets[0].data = sorted.map(item => item[1][metric]);
+            chartInstance.update();
+        }
+
+        function updateQualitativeCharts(data) {
+            const wordFreq = {};
+            data.forEach(item => item.reviewDetails.forEach(r => wordFreq[r.keyword] = (wordFreq[r.keyword] || 0) + 1));
+            const sortedWords = Object.entries(wordFreq).sort((a, b) => b[1] - a[1]).slice(0, 10);
+            const wordCloudContainer = document.getElementById('wordCloud');
+            wordCloudContainer.innerHTML = '';
+            const sizes = ['text-3xl', 'text-2xl', 'text-xl', 'text-lg'];
+            const colors = ['text-purple-600', 'text-pink-600', 'text-cyan-500', 'text-yellow-600', 'text-green-600'];
+            sortedWords.forEach((wordArr, index) => {
+                const span = document.createElement('span');
+                span.textContent = wordArr[0];
+                const sizeIndex = Math.min(sizes.length - 1, Math.floor(index / (sortedWords.length / sizes.length)));
+                span.className = `font-bold ${sizes[sizeIndex]} ${colors[index % colors.length]} transition-transform duration-200 hover:scale-110 cursor-pointer`;
+                wordCloudContainer.appendChild(span);
+            });
+
+            updateTopCharts(data, 'reviewsCount', charts.topReviewed);
+            updateTopCharts(data, 'likes', charts.topLiked);
+
+            const sentimentTimeData = {};
+            data.forEach(item => {
+                const dateStr = item.date.toLocaleDateString('vi-VN');
+                if(!sentimentTimeData[dateStr]) sentimentTimeData[dateStr] = { 'Tích cực': 0, 'Tiêu cực': 0 };
+                item.reviewDetails.forEach(r => {
+                    if(r.sentiment === 'Tích cực') sentimentTimeData[dateStr]['Tích cực']++;
+                    else if(r.sentiment === 'Tiêu cực') sentimentTimeData[dateStr]['Tiêu cực']++;
+                });
+            });
+            charts.sentimentOverTime.data.labels = Object.keys(sentimentTimeData);
+            charts.sentimentOverTime.data.datasets[0].data = Object.values(sentimentTimeData).map(d => d['Tích cực']);
+            charts.sentimentOverTime.data.datasets[1].data = Object.values(sentimentTimeData).map(d => d['Tiêu cực']);
+            charts.sentimentOverTime.update();
+        }
+        
+        function updateOperationsCharts(data){
+            const dailyPromoData = {};
+            data.forEach(item => {
+                const dateStr = item.date.toLocaleDateString('vi-VN');
+                if (!dailyPromoData[dateStr]) dailyPromoData[dateStr] = new Set();
+                if(item.hasPromo) {
+                   dailyPromoData[dateStr].add(item.productId);
+                }
+            });
+            charts.promoTrend.data.labels = Object.keys(dailyPromoData);
+            charts.promoTrend.data.datasets[0].data = Object.values(dailyPromoData).map(set => set.size);
+            charts.promoTrend.update();
+
+            const priceSegments = { '<100k': 0, '100-500k': 0, '500-1tr': 30, '1tr-2tr': 100, '>2tr': 30 };
+            const uniqueProducts = [...new Map(data.map(item => [item.productId, item])).values()];
+            uniqueProducts.forEach(p => {
+                if(p.price < 100) priceSegments['<100k']++;
+                else if (p.price <= 500) priceSegments['100-500k']++;
+                else if (p.price <= 1000) priceSegments['500-1tr']++;
+                else if (p.price <= 2000) priceSegments['1tr-2tr']++;
+                else priceSegments['>2tr']++;
+            });
+            charts.priceSegmentation.data.datasets[0].data = Object.values(priceSegments);
+            charts.priceSegmentation.update();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            masterData = generateMockData();
+            
+            charts.ratingDistribution = new Chart(document.getElementById('ratingDistributionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['5 Sao', '4 Sao', '3 Sao', '2 Sao', '1 Sao'],
+                    datasets: [{
+                        label: 'Phân bổ', data: [],
+                        backgroundColor: [PALETTE.green, PALETTE.blue, PALETTE.yellow, PALETTE.pink, '#ef4444'],
+                        borderColor: '#fff', borderWidth: 2
+                    }]
+                },
+                options: { ...chartDefaultOptions, plugins: { ...chartDefaultOptions.plugins, legend: { position: 'right' } } }
+            });
+
+            charts.sentimentAnalysis = new Chart(document.getElementById('sentimentAnalysisChart'), {
+                type: 'bar', plugins: [ChartDataLabels],
+                data: {
+                    labels: ['Chất lượng SP', 'Giá cả', 'Giao hàng', 'CSKH', 'Khuyến mãi'],
+                    datasets: [
+                        { label: 'Tích cực', data: [73, 57, 35, 75, 76], backgroundColor: PALETTE.green },
+                        { label: 'Trung tính', data: [19, 29, 17, 20, 14], backgroundColor: PALETTE.yellow },
+                        { label: 'Tiêu cực', data: [8, 14, 48, 5, 10], backgroundColor: PALETTE.pink }
+                    ]
+                },
+                options: { ...chartDefaultOptions, indexAxis: 'y', layout: { padding: { right: 40 } },
+                    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.parsed.x.toFixed(0)}%` } },
+                        datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (v) => (v > 5 ? `${v}%` : '') }
+                    },
+                    scales: { x: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + '%' } }, y: { stacked: true } },
+                    animation: { onComplete: ({ chart }) => {
+                        const sentimentTotals = [130, 105, 115, 100, 105];
+                        const ctx = chart.ctx; ctx.save();
+                        ctx.font = 'bold 14px "Be Vietnam Pro"'; ctx.fillStyle = '#374151';
+                        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+                        chart.getDatasetMeta(chart.data.datasets.length - 1).data.forEach((dp, i) => {
+                            ctx.fillText(sentimentTotals[i], chart.chartArea.right + 8, dp.y);
+                        });
+                        ctx.font = 'bold 12px "Be Vietnam Pro"'; ctx.fillStyle = '#6b7280';
+                        ctx.fillText('N (Thảo luận)', chart.chartArea.right + 8, chart.chartArea.top - 15);
+                        ctx.restore();
+                    }}
+                }
+            });
+            
+            charts.topReviewed = new Chart(document.getElementById('topReviewedProductsChart'), {
+                type: 'bar', data: { labels: [], datasets: [{ label: 'Số lượng đánh giá', data: [], backgroundColor: PALETTE.pink + 'B3', borderColor: PALETTE.pink, borderWidth: 1, borderRadius: 4 }] },
+                options: { ...chartDefaultOptions, indexAxis: 'y', plugins: { legend: { display: false } } }
+            });
+
+            charts.topLiked = new Chart(document.getElementById('topLikedProductsChart'), {
+                type: 'bar', data: { labels: [], datasets: [{ label: 'Lượt yêu thích', data: [], backgroundColor: PALETTE.purple + 'B3', borderColor: PALETTE.purple, borderWidth: 1, borderRadius: 4 }] },
+                options: { ...chartDefaultOptions, indexAxis: 'y', plugins: { legend: { display: false } } }
+            });
+
+            charts.sentimentOverTime = new Chart(document.getElementById('sentimentOverTimeChart'), {
+                type: 'line', data: { labels: [], datasets: [
+                    { label: 'Tích cực', data: [], borderColor: PALETTE.green, tension: 0.3, pointRadius: 4 },
+                    { label: 'Tiêu cực', data: [], borderColor: PALETTE.pink, tension: 0.3, pointRadius: 4 }
+                ]},
+                options: chartDefaultOptions
+            });
+
+            charts.revenueTrend = new Chart(document.getElementById('revenueTrendChart'), {
+                type: 'line',
+                data: { labels: [], datasets: [{ label: 'Doanh số', data: [], borderColor: PALETTE.blue, backgroundColor: PALETTE.blue + '33', tension: 0.4, fill: true, yAxisID: 'y' }, { label: 'Lượt bán', data: [], borderColor: PALETTE.pink, backgroundColor: PALETTE.pink + '33', tension: 0.4, fill: false, yAxisID: 'y1' }] },
+                options: { ...chartDefaultOptions, scales: { x: { ...chartDefaultOptions.scales.x }, y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Doanh số', color: PALETTE.blue }, ticks: { color: PALETTE.blue }, grid: { drawOnChartArea: false } }, y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Lượt bán', color: PALETTE.pink }, ticks: { color: PALETTE.pink }, grid: { drawOnChartArea: false } } }}
+            });
+            
+            charts.topRevenue = new Chart(document.getElementById('bizTopRevenueChart'), {
+                type: 'bar', data: { labels: [], datasets: [{ label: 'Doanh số', data: [], backgroundColor: PALETTE.blue + 'B3', borderColor: PALETTE.blue, borderWidth: 1, borderRadius: 4 }] },
+                options: { ...chartDefaultOptions, indexAxis: 'y', plugins: { legend: { display: false } },
+                 scales: { x: { title: { display: true, text: 'Doanh số (nghìn VNĐ)' } } }
+                }
+            });
+            
+            charts.topSales = new Chart(document.getElementById('bizTopSalesChart'), {
+                type: 'bar', data: { labels: [], datasets: [{ label: 'Lượt bán', data: [], backgroundColor: PALETTE.pink + 'B3', borderColor: PALETTE.pink, borderWidth: 1, borderRadius: 4 }] },
+                options: { ...chartDefaultOptions, indexAxis: 'y', plugins: { legend: { display: false } },
+                 scales: { x: { title: { display: true, text: 'Tổng Lượt Bán' } } }
+                }
+            });
+
+            charts.priceSegmentation = new Chart(document.getElementById('priceSegmentationChart'), {
+                type: 'bar',
+                data: { labels: ['<100k', '100-500k', '500-1tr', '1tr-2tr', '>2tr'], datasets: [{ label: 'Số lượng sản phẩm', data: [], backgroundColor: [PALETTE.blue, PALETTE.purple, PALETTE.pink, PALETTE.yellow, PALETTE.green], borderRadius: 4 }] },
+                options: { ...chartDefaultOptions, plugins: { ...chartDefaultOptions.plugins, legend: { display: false } } }
+            });
+            
+            charts.promoTrend = new Chart(document.getElementById('promoTrendChart'), {
+                type: 'line',
+                data: { labels: [], datasets: [{ label: 'Số SP Khuyến mãi', data: [], borderColor: PALETTE.blue, tension: 0.3, fill: false }] },
+                options: { ...chartDefaultOptions, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+
+            document.querySelectorAll('.time-filter-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    document.querySelector('.time-filter-btn.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    updateDashboard(parseInt(e.target.dataset.days));
+                });
+            });
+
+            updateDashboard(30);
+        });
+
+    </script>
+</body>
+</html>
