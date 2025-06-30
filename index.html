@@ -3,334 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Báo cáo Đánh giá: Jack97 vs. Đen Vâu vs. Phạm Thoại (2024)</title>
+    <title>Sơ đồ Quy trình Chứng nhận TRS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9; /* slate-100 */
         }
-        .score-card {
-            background-color: white;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
-            padding: 1.5rem; /* p-6 */
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        /* Custom styles for arrows */
+        .arrow {
+            position: relative;
+            text-align: center;
         }
-        .score-circle-bg {
-            stroke: #e5e7eb; /* gray-200 */
+        .arrow .arrow-line {
+            height: 30px;
+            width: 2px;
+            background-color: #9ca3af;
+            margin: 0 auto;
         }
-        .score-circle-fg {
-            transition: stroke-dashoffset 0.8s ease-out;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
+        .arrow .arrow-head {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #9ca3af;
+            margin: 0 auto;
         }
-        details > summary {
-            list-style: none;
-            cursor: pointer;
-        }
-        details > summary::-webkit-details-marker {
-            display: none;
-        }
-        details[open] summary .arrow {
-            transform: rotate(90deg);
+        .connector-line {
+            width: 2px;
+            background-color: #9ca3af;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Báo cáo Đánh giá Influencer 2024</h1>
-            <p class="mt-2 text-slate-600">Phân tích và so sánh hoạt động của Jack97, Đen Vâu, và Phạm Thoại theo bộ quy tắc chung.</p>
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Quy Trình Chứng Nhận Influencer (TRS)</h1>
+            <p class="mt-2 text-lg text-gray-600">Sơ đồ trực quan hóa các giai đoạn từ đăng ký đến hậu kiểm.</p>
         </header>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Jack97's Card (Updated) -->
-            <div class="score-card">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold mb-4">Jack97 (Trịnh Trần Phương Tuấn)</h2>
-                    <div id="jackScoreChart" class="relative w-48 h-48 mx-auto mb-4">
-                        <!-- SVG chart will be injected here -->
+        <div class="flex flex-col lg:flex-row lg:space-x-8">
+
+            <!-- Giai đoạn 1: Đánh giá & Cấp chứng chỉ -->
+            <div class="flex-1">
+                <h2 class="text-2xl font-bold text-center text-teal-700 mb-6 pb-2 border-b-2 border-teal-500">Giai đoạn 1: Đánh giá & Cấp chứng chỉ</h2>
+                <div class="space-y-4 relative">
+                    <!-- Start -->
+                    <div class="bg-teal-50 border-2 border-teal-200 rounded-xl p-5 shadow-md text-center">
+                        <h3 class="font-bold text-teal-800">Bắt đầu</h3>
                     </div>
-                </div>
-                <div class="flex-grow space-y-3">
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            1. Minh bạch Nội dung & QC (20/25)
-                            <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Hashtag minh bạch (0đ):</b> Không có vi phạm.</span></li>
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Công khai tài trợ (0đ):</b> Công ty tự bán sản phẩm, không có bằng chứng về việc che giấu tài trợ.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Tránh hiểu lầm (-5đ):</b> Dùng cụm từ "đợt duy nhất" và chậm trễ giao hàng Lightstick gây hiểu lầm, dù không liên quan chất lượng sản phẩm.</span></li>
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Công bố link affiliate (0đ):</b> Chưa có dấu hiệu vi phạm.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            2. Hành vi & Đạo đức (10/20)
-                            <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Không vi phạm pháp luật (-5đ):</b> Vụ việc Lightstick vi phạm Luật Bảo vệ quyền lợi người tiêu dùng 2023.</span></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không phát ngôn kỳ thị (0đ):</b> Không có nội dung vi phạm.</span></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không phát tán tin giả (0đ):</b> Không có nội dung vi phạm.</span></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Trách nhiệm khi sai phạm (-5đ):</b> Phản hồi vụ Lightstick nhưng không nhận sai, đổ lỗi cho yếu tố khác.</span></li>
-                        </ul>
-                    </details>
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            3. Tương tác & Phản hồi CĐ (10/20)
-                            <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Tương tác thực (0đ):</b> Không có dữ liệu cụ thể để đánh giá.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Sentiment tích cực (-5đ):</b> Nhiều phản hồi tiêu cực về vụ việc Lightstick.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Ứng xử truyền thông (-5đ):</b> Phản hồi chậm, thiếu trách nhiệm với khiếu nại của người hâm mộ.</span></li>
-                        </ul>
-                    </details>
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           4. Phù hợp Giá trị & Thương hiệu (10/20)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Hình ảnh cá nhân phù hợp (0đ):</b> Không vi phạm thuần phong mỹ tục.</span></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Thông điệp tích cực (0đ):</b> Thường xuyên bày tỏ lòng biết ơn fan.</span></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Không tạo scandal (-5đ):</b> Vướng vào scandal (Lightstick, Thiên An, đạo nhạc).</span></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Hợp tác minh bạch (-5đ):</b> Vụ Lightstick cho thấy sự thiếu minh bạch trong kinh doanh.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           5. Bảo vệ Dữ liệu Cá nhân (5/15)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không công khai trái phép (0đ):</b> Không có nội dung vi phạm.</span></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Không thu thập trái phép (-5đ):</b> Form mua hàng không có sự đồng ý rõ ràng về thu thập dữ liệu.</span></li>
-                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Thông báo quyền riêng tư (-5đ):</b> Không có điều khoản minh bạch về quyền riêng tư.</span></li>
-                        </ul>
-                    </details>
+                    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+                    <!-- 1. Tiếp nhận & Đăng ký -->
+                    <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">1. Tiếp nhận & Đăng ký</h3>
+                                <p class="text-gray-600 mt-1">Cá nhân/KOL-KOC cung cấp thông tin trên Hệ thống TRS.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+                    <!-- 2. Thẩm định sơ bộ -->
+                    <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                         <div class="flex items-start space-x-4">
+                            <div class="bg-purple-100 text-purple-600 p-3 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">2. Thẩm định sơ bộ</h3>
+                                <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
+                                    <li>Kiểm tra tính hợp lệ của hồ sơ</li>
+                                    <li>Đánh giá theo hệ thống tiêu chuẩn TRS</li>
+                                    <li>Chấm điểm theo quy tắc của hệ thống</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+                    
+                    <!-- Quyết định -->
+                     <div class="bg-gray-100 rounded-xl p-4 text-center shadow-md">
+                        <h3 class="font-bold text-gray-700">Kết quả thẩm định sơ bộ?</h3>
+                         <div class="mt-4 flex justify-around">
+                            <div class="text-center">
+                                <span class="font-semibold text-green-600">Đạt</span>
+                                <div class="arrow mt-1"><div class="arrow-line !h-[20px] !bg-green-400"></div><div class="arrow-head !border-t-green-400"></div></div>
+                            </div>
+                             <div class="text-center">
+                                <span class="font-semibold text-red-600">Không Đạt</span>
+                                <div class="arrow mt-1"><div class="arrow-line !h-[20px] !bg-red-400"></div><div class="arrow-head !border-t-red-400"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nhánh xử lý -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Nhánh Đạt -->
+                        <div class="space-y-4">
+                             <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                                <h3 class="font-bold text-lg mb-2">3. Đào tạo bổ sung</h3>
+                                <p class="text-gray-600">Hoàn thành khóa học "Đạo đức truyền thông".</p>
+                            </div>
+                             <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+                             <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                                <h3 class="font-bold text-lg mb-2">4. Xét duyệt</h3>
+                                <p class="text-gray-600">Hồ sơ được trình lên Hội đồng xét duyệt (pháp lý, truyền thông, dữ liệu, người tiêu dùng).</p>
+                            </div>
+                            <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+                            <div class="bg-green-100 border-2 border-green-300 rounded-xl p-5 shadow-xl text-center">
+                                <h3 class="font-bold text-2xl text-green-800">5. Cấp Chứng chỉ TRS</h3>
+                            </div>
+                        </div>
+                        <!-- Nhánh Không Đạt -->
+                        <div class="space-y-4">
+                             <div class="bg-amber-100 border-2 border-amber-300 rounded-xl p-5 shadow-md text-center h-full flex flex-col justify-center">
+                                <h3 class="font-bold text-amber-800">Từ chối / Yêu cầu bổ sung</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Đen Vâu's Card (Fully Detailed) -->
-            <div class="score-card">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold mb-4">Đen Vâu (Nguyễn Đức Cường)</h2>
-                     <div id="denVauScoreChart" class="relative w-48 h-48 mx-auto mb-4">
-                        <!-- SVG chart will be injected here -->
+            <!-- Giai đoạn 2: Quản lý & Vận hành -->
+            <div class="flex-1 mt-12 lg:mt-0">
+                <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6 pb-2 border-b-2 border-indigo-500">Giai đoạn 2: Quản lý & Vận hành</h2>
+                <div class="space-y-6">
+                    <!-- Card 6 -->
+                    <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                         <div class="flex items-start space-x-4">
+                            <div class="bg-cyan-100 text-cyan-600 p-3 rounded-full">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5" /></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">6. Quản lý & Hậu kiểm</h3>
+                                <p class="text-gray-600 mt-1">Hậu kiểm định kỳ hoặc ngẫu nhiên nhằm đảm bảo Influencer vẫn giữ chuẩn đạo đức.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 7 -->
+                     <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                         <div class="flex items-start space-x-4">
+                             <div class="bg-pink-100 text-pink-600 p-3 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">7. Ràng buộc & Hiệu lực</h3>
+                                <p class="font-medium text-gray-800 mt-2">Quy tắc sử dụng:</p>
+                                <ul class="list-disc list-inside mt-1 text-gray-600 space-y-1">
+                                    <li>Không gắn mác "được chứng nhận TRS" cho nội dung ngoài phạm vi.</li>
+                                    <li>Không dùng chứng chỉ để gây hiểu nhầm, che giấu sai trái.</li>
+                                </ul>
+                                <p class="font-medium text-gray-800 mt-3">Cyber Trust có quyền:</p>
+                                <ul class="list-disc list-inside mt-1 text-gray-600 space-y-1">
+                                    <li>Đình chỉ/tước chứng chỉ nếu vi phạm.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Card 8 -->
+                     <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
+                         <div class="flex items-start space-x-4">
+                            <div class="bg-orange-100 text-orange-600 p-3 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">8. Xem xét Khiếu nại</h3>
+                                <p class="text-gray-600 mt-1">Gửi đơn khiếu nại chính thức kèm theo tài liệu, dẫn chứng. Chuyên viên và hội đồng sẽ xem xét.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Thu hồi -->
+                    <div class="bg-red-100 border-2 border-red-300 rounded-xl p-5 shadow-xl">
+                        <h3 class="font-bold text-lg text-red-800 text-center mb-3">Xử lý vi phạm</h3>
+                        <div class="text-red-700 space-y-2">
+                             <p><span class="font-semibold">Đình chỉ/Tước chứng chỉ:</span> Áp dụng khi phát hiện vi phạm.</p>
+                             <p><span class="font-semibold">Công khai thông tin:</span> Lưu thông tin thu hồi công khai trên hệ thống tối thiểu 12 tháng.</p>
+                             <p><span class="font-semibold">Nộp lại hồ sơ:</span> Chỉ được phép sau tối thiểu 6 tháng kể từ ngày thu hồi.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="flex-grow space-y-3">
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            1. Minh bạch Nội dung & QC (25/25)
-                            <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Minh bạch từ thiện:</b> Công khai toàn bộ doanh thu từ dự án "Nấu Ăn Cho Em" một cách rõ ràng, định kỳ. Không có hoạt động quảng cáo cần đánh dấu.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            2. Hành vi & Đạo đức (20/20)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                         <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không vi phạm pháp luật (0đ):</b> Các hoạt động đều tuân thủ quy định.</span></li>
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không phát ngôn kỳ thị (0đ):</b> Ngôn từ trong âm nhạc và giao tiếp luôn chuẩn mực, không gây thù ghét.</span></li>
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không phát tán tin giả (0đ):</b> Thông tin chia sẻ đều xác thực và từ nguồn chính thống.</span></li>
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Trách nhiệm khi có sự việc (0đ):</b> Vụ việc Festival Huế được BTC giải thích rõ ràng, không phải lỗi từ phía nghệ sĩ.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           3. Tương tác & Phản hồi CĐ (20/20)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                         <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Tương tác thực (0đ):</b> Các sản phẩm âm nhạc đều đạt top trending và có lượt xem cao, cho thấy tương tác thật và lớn.</span></li>
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Sentiment tích cực (0đ):</b> Nhận được sự yêu mến, ủng hộ lớn từ cộng đồng, đặc biệt với các dự án vì xã hội.</span></li>
-                             <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Ứng xử truyền thông (0đ):</b> Giữ im lặng đúng mực, không tạo tranh cãi không đáng có và giao tiếp chân thành.</span></li>
-                        </ul>
-                    </details>
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           4. Phù hợp Giá trị & Thương hiệu (20/20)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                         <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Hình ảnh cá nhân phù hợp (0đ):</b> Xây dựng hình ảnh nghệ sĩ giản dị, có chiều sâu, không vướng scandal tai tiếng.</span></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Thông điệp tích cực (0đ):</b> Âm nhạc và hoạt động lan tỏa giá trị nhân văn, yêu thiên nhiên, cuộc sống và lòng trắc ẩn.</span></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không tạo scandal (0đ):</b> Đời tư kín tiếng, không có scandal ảnh hưởng tiêu cực đến hình ảnh thương hiệu.</span></li>
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Hợp tác minh bạch (0đ):</b> Hợp tác trong các dự án cộng đồng được báo cáo rõ ràng và đáng tin cậy.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           5. Bảo vệ Dữ liệu Cá nhân (15/15)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                         <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                            <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không có hoạt động thu thập dữ liệu người dùng</b> nên không có vi phạm ở trụ cột này.</span></li>
-                        </ul>
-                    </details>
-                </div>
             </div>
-            
-            <!-- Phạm Thoại's Card -->
-            <div class="score-card">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold mb-4">Phạm Thoại</h2>
-                    <div id="phamThoaiScoreChart" class="relative w-48 h-48 mx-auto mb-4">
-                        <!-- SVG chart will be injected here -->
-                    </div>
-                </div>
-                <div class="flex-grow space-y-3">
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            1. Minh bạch Nội dung & QC (5/25)
-                            <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Hashtag minh bạch (-5đ):</b> Không dùng #ad, #sponsored cho các bài đăng hợp tác với Gucci, L'Oréal, M.O.I.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Công khai tài trợ (-5đ):</b> Không công khai vai trò hợp tác thương mại trong các bài đăng sự kiện.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Tránh hiểu lầm (-5đ):</b> Dùng các từ "phiên live triệu đô", "độc nhất" không có chứng minh; cam kết tặng 100 iPhone 16 gây nhầm lẫn.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Công bố link affiliate (-5đ):</b> Yêu cầu "share", "follow" để trúng thưởng là hành vi lôi kéo tương tác không minh bạch.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            2. Hành vi & Đạo đức (10/20)
-                            <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không vi phạm pháp luật (0đ):</b> Không có thông tin về việc bị xử phạt.</span></li>
-                           <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Không phát ngôn kỳ thị (-5đ):</b> Thường xuyên có phát ngôn công kích, hạ thấp người khác ("Chị đại diện cho vong ạ").</span></li>
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không phát tán tin giả (0đ):</b> Chủ động cảnh báo về các trang lừa đảo.</span></li>
-                           <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Trách nhiệm khi sai phạm (-5đ):</b> Không cải chính, xin lỗi về các phát ngôn gây tranh cãi, duy trì hình ảnh "mỏ hỗn".</span></li>
-                        </ul>
-                    </details>
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                            3. Tương tác & Phản hồi CĐ (0/20)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Tương tác thực (-10đ):</b> Tổ chức giveaway lớn để khuyến khích tương tác, cho thấy sự thiếu tự nhiên.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Sentiment tích cực (-5đ):</b> Hình ảnh gây tranh cãi, tạo ra nhiều thảo luận tiêu cực.</span></li>
-                             <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Ứng xử truyền thông (-5đ):</b> Thái độ đối đầu, công kích khi gặp ý kiến trái chiều.</span></li>
-                        </ul>
-                    </details>
-                    <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           4. Phù hợp Giá trị & Thương hiệu (15/20)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                        <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Hình ảnh cá nhân phù hợp (0đ):</b> Nội dung không vi phạm các điều cấm như bạo lực, dâm ô.</span></li>
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Thông điệp tích cực (0đ):</b> Điểm sáng với các hoạt động từ thiện lớn và minh bạch (ủng hộ lũ lụt, xây nhà, hỗ trợ bệnh nhi).</span></li>
-                           <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Không tạo scandal (-5đ):</b> Cố ý dùng chiêu trò, phát ngôn gây sốc để tạo tranh cãi.</span></li>
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Hợp tác minh bạch (0đ):</b> Có lịch sử hợp tác với các thương hiệu lớn, uy tín.</span></li>
-                        </ul>
-                    </details>
-                     <details class="bg-slate-50 rounded-lg">
-                        <summary class="p-4 font-semibold flex justify-between items-center">
-                           5. Bảo vệ Dữ liệu Cá nhân (5/15)
-                           <span class="arrow transition-transform duration-200">▶</span>
-                        </summary>
-                         <ul class="p-4 pt-0 space-y-2 text-sm text-slate-700">
-                           <li class="flex items-start"><span class="text-green-500 mr-2">✔️</span><span><b>Không công khai trái phép (0đ):</b> Không có bằng chứng vi phạm.</span></li>
-                           <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Không thu thập trái phép (-5đ):</b> Tin tuyển dụng không có điều khoản đồng ý rõ ràng về xử lý dữ liệu.</span></li>
-                           <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span><b>Thông báo quyền riêng tư (-5đ):</b> Các chương trình giveaway không có thể lệ chi tiết, không thông báo về mục đích thu thập dữ liệu.</span></li>
-                        </ul>
-                    </details>
-                </div>
-            </div>
-        </main>
+        </div>
         
-        <footer class="text-center mt-12 text-sm text-slate-500">
-            <p>Phân tích được thực hiện dựa trên bộ quy tắc và thông tin công khai trong giai đoạn 2024.</p>
-            <p>Điểm số được chấm bằng cách áp dụng cùng một bộ quy tắc cho tất cả các nhân vật.</p>
+        <footer class="text-center mt-12 pt-6 border-t border-gray-300">
+            <p class="text-sm text-gray-500">&copy; 2025 Cyber Trust. All Rights Reserved.</p>
         </footer>
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        /**
-         * Function to create a circular score chart using SVG.
-         * @param {string} elementId - The ID of the div element to inject the chart into.
-         * @param {number} score - The score (0-100) to display.
-         * @param {string} color - The hex color for the progress bar.
-         */
-        function createScoreChart(elementId, score, color) {
-            const container = document.getElementById(elementId);
-            if (!container) return;
-
-            const size = 192; // SVG viewport size
-            const strokeWidth = 16;
-            const radius = (size - strokeWidth) / 2;
-            const circumference = 2 * Math.PI * radius;
-            // Ensure score is within 0-100 range for calculation
-            const clampedScore = Math.max(0, Math.min(100, score));
-            const offset = circumference - (clampedScore / 100) * circumference;
-
-            const svgHtml = `
-                <svg class="w-full h-full" viewBox="0 0 ${size} ${size}">
-                    <circle class="score-circle-bg"
-                        stroke-width="${strokeWidth}"
-                        fill="transparent"
-                        r="${radius}"
-                        cx="${size / 2}"
-                        cy="${size / 2}"
-                    />
-                    <circle class="score-circle-fg"
-                        stroke="${color}"
-                        stroke-width="${strokeWidth}"
-                        stroke-linecap="round"
-                        stroke-dasharray="${circumference}"
-                        stroke-dashoffset="${circumference}"
-                        fill="transparent"
-                        r="${radius}"
-                        cx="${size / 2}"
-                        cy="${size / 2}"
-                    >
-                        <animate attributeName="stroke-dashoffset" from="${circumference}" to="${offset}" dur="0.8s" fill="freeze" />
-                    </circle>
-                </svg>
-                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span class="text-4xl font-bold" style="color: ${color};">${score}</span>
-                    <span class="text-sm font-semibold text-slate-500">/ 100</span>
-                </div>
-            `;
-            container.innerHTML = svgHtml;
-        }
-        
-        // Define scores and colors
-        const jackScore = 55;
-        const denVauScore = 100;
-        const phamThoaiScore = 35;
-
-        // Function to determine color based on score
-        const getColorForScore = (score) => {
-            if (score >= 75) return '#22c55e'; // green-500
-            if (score >= 50) return '#f59e0b'; // amber-500
-            return '#ef4444'; // red-500
-        };
-
-        // Generate charts for all artists
-        createScoreChart('jackScoreChart', jackScore, getColorForScore(jackScore));
-        createScoreChart('denVauScoreChart', denVauScore, getColorForScore(denVauScore));
-        createScoreChart('phamThoaiScoreChart', phamThoaiScore, getColorForScore(phamThoaiScore));
-    });
-    </script>
 </body>
 </html>
