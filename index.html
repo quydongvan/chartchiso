@@ -3,180 +3,437 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sơ đồ Quy trình Chứng nhận TRS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Công cụ chuyển đổi Excel (Tùy chọn tên file)</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
         }
-        /* Custom styles for arrows */
-        .arrow {
-            position: relative;
+
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 750px;
+        }
+
+        h1 {
             text-align: center;
+            color: #4a4a4a;
+            margin-top: 0;
+            margin-bottom: 25px;
         }
-        .arrow .arrow-line {
-            height: 30px;
-            width: 2px;
-            background-color: #9ca3af;
-            margin: 0 auto;
+
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            margin-top: 0;
         }
-        .arrow .arrow-head {
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 8px solid #9ca3af;
-            margin: 0 auto;
+
+        .step-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        /* Tùy chỉnh nút chọn file */
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+        #fileName {
+            margin-left: 15px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .sheets-container {
+            display: flex;
+            gap: 20px;
+            min-height: 150px;
+        }
+
+        .sheet-list-panel {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 250px;
+        }
+
+        .rename-panel {
+            flex: 2;
+        }
+
+        .sheet-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .sheet-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .rename-entry {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+        .rename-entry label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+        .rename-entry input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .placeholder {
+            color: #888;
+            font-style: italic;
+        }
+        
+        /* === CSS MỚI CHO Ô NHẬP TÊN FILE === */
+        .filename-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .filename-input-container label {
+            font-weight: 500;
+        }
+        #outputFileName {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .file-extension {
+            color: #666;
+            background-color: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            border-left: none;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
+    <div class="container">
+        <h1>Công cụ chuyển đổi Excel cho Dung - By Quý đẹp trai</h1>
 
-    <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Quy Trình Chứng Nhận Influencer (TRS)</h1>
-            <p class="mt-2 text-lg text-gray-600">Sơ đồ trực quan hóa các giai đoạn từ đăng ký đến hậu kiểm.</p>
-        </header>
+        <div class="step-box">
+            <h2>Bước 1: Chọn File Excel Nguồn</h2>
+            <input type="file" id="inputFile" accept=".xlsx, .xls">
+            <label for="inputFile" class="file-label">Chọn File...</label>
+            <span id="fileName">Chưa chọn file nào</span>
+        </div>
 
-        <div class="flex flex-col lg:flex-row lg:space-x-8">
-
-            <!-- Giai đoạn 1: Đánh giá & Cấp chứng chỉ -->
-            <div class="flex-1">
-                <h2 class="text-2xl font-bold text-center text-teal-700 mb-6 pb-2 border-b-2 border-teal-500">Giai đoạn 1: Đánh giá & Cấp chứng chỉ</h2>
-                <div class="space-y-4 relative">
-                    <!-- Start -->
-                    <div class="bg-teal-50 border-2 border-teal-200 rounded-xl p-5 shadow-md text-center">
-                        <h3 class="font-bold text-teal-800">Bắt đầu</h3>
+        <div class="step-box" id="step2Box" style="display: none;">
+            <h2>Bước 2: Chọn/Bỏ chọn trang tính và đổi tên nếu muốn</h2>
+            <div class="sheets-container">
+                <div id="sheetList" class="sheet-list-panel">
                     </div>
-                    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
-
-                    <!-- 1. Tiếp nhận & Đăng ký -->
-                    <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">Bước 1: Tiếp nhận và đăng ký</h3>
-                                <p class="text-gray-600 mt-1">Cá nhân/KOL-KOC cung cấp thông tin trên Hệ thống TRS.</p>
-                            </div>
-                        </div>
+                <div id="renameFields" class="rename-panel">
+                    <p class="placeholder">Chọn một hoặc nhiều trang tính từ danh sách bên trái để bắt đầu.</p>
                     </div>
-                    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
-
-                    <!-- 2. Thẩm định sơ bộ & Đánh giá -->
-                    <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                         <div class="flex items-start space-x-4">
-                            <div class="bg-purple-100 text-purple-600 p-3 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">Bước 2 & 3: Thẩm định và Đánh giá</h3>
-                                <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
-                                    <li><b>Thẩm định sơ bộ:</b> Kiểm tra tính hợp lệ của hồ sơ.</li>
-                                    <li><b>Đánh giá TRS:</b> Chấm điểm theo hệ thống tiêu chuẩn.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
-                    
-                    <!-- Quyết định -->
-                     <div class="bg-gray-100 rounded-xl p-4 text-center shadow-md">
-                        <h3 class="font-bold text-gray-700">Kết quả thẩm định sơ bộ?</h3>
-                         <div class="mt-4 flex justify-around">
-                            <div class="text-center">
-                                <span class="font-semibold text-green-600">Đạt</span>
-                                <div class="arrow mt-1"><div class="arrow-line !h-[20px] !bg-green-400"></div><div class="arrow-head !border-t-green-400"></div></div>
-                            </div>
-                             <div class="text-center">
-                                <span class="font-semibold text-red-600">Không Đạt</span>
-                                <div class="arrow mt-1"><div class="arrow-line !h-[20px] !bg-red-400"></div><div class="arrow-head !border-t-red-400"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Nhánh xử lý -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Nhánh Đạt -->
-                        <div class="space-y-4">
-                             <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                                <p class="text-gray-600">Hoàn thành khóa học "Đạo đức truyền thông" (nếu có yêu cầu).</p>
-                            </div>
-                             <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
-                             <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                                <h3 class="font-bold text-lg mb-2">Bước 4: Xét duyệt cấp chứng chỉ</h3>
-                                <p class="text-gray-600">Hồ sơ được trình lên Hội đồng xét duyệt để quyết định cuối cùng.</p>
-                            </div>
-                            <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
-                            <div class="bg-green-100 border-2 border-green-300 rounded-xl p-5 shadow-xl text-center">
-                                <h3 class="font-bold text-xl text-green-800">Bước 5: Cấp & Công bố Chứng chỉ</h3>
-                            </div>
-                        </div>
-                        <!-- Nhánh Không Đạt -->
-                        <div class="space-y-4">
-                             <div class="bg-amber-100 border-2 border-amber-300 rounded-xl p-5 shadow-md text-center h-full flex flex-col justify-center">
-                                <h3 class="font-bold text-amber-800">Từ chối / Yêu cầu bổ sung</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Giai đoạn 2: Quản lý & Vận hành -->
-            <div class="flex-1 mt-12 lg:mt-0">
-                <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6 pb-2 border-b-2 border-indigo-500">Giai đoạn 2: Quản lý & Vận hành</h2>
-                <div class="space-y-6">
-                    <!-- Bước 6 -->
-                    <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                         <div class="flex items-start space-x-4">
-                            <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full">
-                               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5" /></svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">Bước 6: Quản lý hậu kiểm và tái xác minh</h3>
-                                <p class="text-gray-600 mt-1">Thực hiện hậu kiểm định kỳ hoặc ngẫu nhiên để đảm bảo Influencer duy trì tuân thủ các tiêu chuẩn.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Bước 7 -->
-                     <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                         <div class="flex items-start space-x-4">
-                             <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">Bước 7: Ràng buộc và hiệu lực chứng chỉ</h3>
-                                <p class="font-medium text-gray-800 mt-2">Quy tắc sử dụng & Xử lý vi phạm:</p>
-                                <ul class="list-disc list-inside mt-1 text-gray-600 space-y-1">
-                                    <li>Không lạm dụng chứng chỉ, không che giấu sai trái.</li>
-                                    <li class="text-red-700"><b>Vi phạm sẽ bị đình chỉ/tước chứng chỉ.</b></li>
-                                    <li class="text-red-700">Thông tin thu hồi công khai tối thiểu 12 tháng.</li>
-                                    <li class="text-red-700">Chỉ được nộp lại hồ sơ sau tối thiểu 6 tháng.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                     <!-- Bước 8 -->
-                     <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-                         <div class="flex items-start space-x-4">
-                            <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">Bước 8: Xem xét Khiếu nại</h3>
-                                <p class="text-gray-600 mt-1">Tiếp nhận và xử lý các khiếu nại liên quan đến Influencer được chứng nhận theo quy trình.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-        
-        <footer class="text-center mt-12 pt-6 border-t border-gray-300">
-            <p class="text-sm text-gray-500">&copy; 2025 Cyber Trust. All Rights Reserved.</p>
-        </footer>
+
+        <div class="step-box" id="step3Box" style="display: none;">
+            <h2>Bước 3: Chuyển đổi và Lưu</h2>
+            
+            <div class="filename-input-container">
+                <label for="outputFileName">Tên file xuất ra:</label>
+                <input type="text" id="outputFileName" value="Output_Data">
+                <span class="file-extension">.xlsx</span>
+            </div>
+            
+            <button id="processButton" disabled>Chuyển đổi và Tải File Xuống</button>
+            <div id="status"></div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const inputFile = document.getElementById('inputFile');
+            const fileNameSpan = document.getElementById('fileName');
+            const step2Box = document.getElementById('step2Box');
+            const step3Box = document.getElementById('step3Box');
+            const sheetListDiv = document.getElementById('sheetList');
+            const renameFieldsDiv = document.getElementById('renameFields');
+            const processButton = document.getElementById('processButton');
+            const statusDiv = document.getElementById('status');
+            // === JS MỚI: LẤY Ô NHẬP TÊN FILE ===
+            const outputFileNameInput = document.getElementById('outputFileName');
+
+            let workbook = null;
+            let selectedSheets = {};
+
+            inputFile.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                fileNameSpan.textContent = file.name;
+                statusDiv.textContent = 'Đang đọc file...';
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        workbook = XLSX.read(data, { type: 'array' });
+                        
+                        step2Box.style.display = 'block';
+                        step3Box.style.display = 'block';
+                        
+                        displaySheets(workbook.SheetNames);
+                        statusDiv.textContent = '';
+                    } catch (err) {
+                        statusDiv.textContent = `Lỗi đọc file: ${err.message}`;
+                        statusDiv.style.color = 'red';
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            function displaySheets(sheetNames) {
+                sheetListDiv.innerHTML = '';
+                sheetNames.forEach(name => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'sheet-item';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `sheet-${name}`;
+                    checkbox.value = name;
+                    checkbox.addEventListener('change', updateRenameFields);
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `sheet-${name}`;
+                    label.textContent = name;
+
+                    itemDiv.appendChild(checkbox);
+                    itemDiv.appendChild(label);
+                    sheetListDiv.appendChild(itemDiv);
+                });
+                updateRenameFields();
+            }
+
+            function updateRenameFields() {
+                renameFieldsDiv.innerHTML = '';
+                selectedSheets = {};
+
+                const checkedBoxes = sheetListDiv.querySelectorAll('input[type="checkbox"]:checked');
+
+                if (checkedBoxes.length === 0) {
+                    renameFieldsDiv.innerHTML = '<p class="placeholder">Chọn một hoặc nhiều trang tính từ danh sách bên trái để bắt đầu.</p>';
+                    processButton.disabled = true;
+                    return;
+                }
+
+                checkedBoxes.forEach(box => {
+                    const sheetName = box.value;
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'rename-entry';
+
+                    const label = document.createElement('label');
+                    label.textContent = `${sheetName} →`;
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = sheetName;
+                    
+                    entryDiv.appendChild(label);
+                    entryDiv.appendChild(input);
+                    renameFieldsDiv.appendChild(entryDiv);
+                    
+                    selectedSheets[sheetName] = input;
+                });
+                
+                processButton.disabled = false;
+            }
+
+            processButton.addEventListener('click', () => {
+                if (!workbook || Object.keys(selectedSheets).length === 0) {
+                    alert("Vui lòng chọn file và ít nhất một trang tính.");
+                    return;
+                }
+
+                statusDiv.textContent = '⏳ Đang xử lý...';
+                processButton.disabled = true;
+
+                setTimeout(() => {
+                    try {
+                        const allDataFrames = [];
+                        const sheetNamesToProcess = Object.keys(selectedSheets);
+
+                        for (const sheetName of sheetNamesToProcess) {
+                            const ws = workbook.Sheets[sheetName];
+                            const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+                            
+                            if (data.length < 2) continue;
+
+                            const categoryKeywords = {};
+
+                            for (let i = 1; i < data.length; i++) {
+                                const row = data[i];
+                                const keyword = String(row[0] || '').trim();
+                                if (!keyword) continue;
+
+                                for (let j = 3; j < row.length; j++) {
+                                    const category = String(row[j] || '').trim();
+                                    if (category) {
+                                        if (!categoryKeywords[category]) {
+                                            categoryKeywords[category] = new Set();
+                                        }
+                                        categoryKeywords[category].add(keyword);
+                                    }
+                                }
+                            }
+
+                            if (Object.keys(categoryKeywords).length === 0) continue;
+
+                            const fixed_order = [
+                                "Funny Meme", "Gif", "Entertainment", "Sports", "Cat", "Dog", "Animal",
+                                "Game", "Love", "Emoji", "Quotes", "President", "Anime", "Food"
+                            ];
+                            const finalData = [];
+                            const processedCategories = new Set();
+
+                            fixed_order.forEach(categoryName => {
+                                if (categoryKeywords[categoryName]) {
+                                    const keywordString = Array.from(categoryKeywords[categoryName]).sort().join(', ');
+                                    finalData.push({ Category: categoryName, Keyword: keywordString });
+                                    processedCategories.add(categoryName);
+                                }
+                            });
+
+                            const remainingCategories = Object.keys(categoryKeywords)
+                                .filter(cat => !processedCategories.has(cat))
+                                .sort();
+
+                            remainingCategories.forEach(categoryName => {
+                                const keywordString = Array.from(categoryKeywords[categoryName]).sort().join(', ');
+                                finalData.push({ Category: categoryName, Keyword: keywordString });
+                            });
+                            
+                            const newSheetName = selectedSheets[sheetName].value.trim();
+                            const outputData = finalData.map(row => ({
+                                Country: newSheetName,
+                                ...row
+                            }));
+
+                            allDataFrames.push(...outputData);
+                        }
+
+                        if (allDataFrames.length === 0) {
+                            statusDiv.textContent = 'Hoàn tất. Không có dữ liệu hợp lệ để xử lý.';
+                            processButton.disabled = false;
+                            return;
+                        }
+
+                        const newWB = XLSX.utils.book_new();
+                        const newWS = XLSX.utils.json_to_sheet(allDataFrames);
+
+                        const merges = [];
+                        if (allDataFrames.length > 0) {
+                            let startRow = 1;
+                            for (let i = 1; i < allDataFrames.length; i++) {
+                                if (allDataFrames[i].Country !== allDataFrames[i - 1].Country) {
+                                    if (i - startRow > 0) {
+                                       merges.push({ s: { r: startRow, c: 0 }, e: { r: i, c: 0 } });
+                                    }
+                                    startRow = i + 1;
+                                }
+                            }
+                            merges.push({ s: { r: startRow, c: 0 }, e: { r: allDataFrames.length, c: 0 } });
+                        }
+                        
+                        newWS['!merges'] = merges;
+                        
+                        XLSX.utils.book_append_sheet(newWB, newWS, 'Transformed_Data');
+                        
+                        // === JS MỚI: LẤY TÊN FILE VÀ TẢI VỀ ===
+                        let outputName = outputFileNameInput.value.trim();
+                        if (!outputName) {
+                            outputName = 'Output_Data'; // Tên mặc định nếu người dùng xóa hết
+                        }
+                        const finalFileName = `${outputName}.xlsx`;
+                        
+                        XLSX.writeFile(newWB, finalFileName);
+
+                        statusDiv.innerHTML = `✅ Thành công! File <strong>${finalFileName}</strong> đã được tải xuống.`;
+                        statusDiv.style.color = 'green';
+                    
+                    } catch (err) {
+                        statusDiv.textContent = `Lỗi xử lý: ${err.message}`;
+                        statusDiv.style.color = 'red';
+                        console.error(err);
+                    } finally {
+                        processButton.disabled = false;
+                    }
+                }, 100);
+            });
+        });
+    </script>
 </body>
 </html>
