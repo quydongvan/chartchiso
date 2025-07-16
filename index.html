@@ -3,353 +3,437 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biểu mẫu Đăng ký và Khiếu nại</title>
-    <!-- Tải Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Công cụ chuyển đổi Excel (Tùy chọn tên file)</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
         }
-        /* Tùy chỉnh kiểu cho file input */
-        .file-input-container {
-            position: relative;
-            border: 2px dashed #cbd5e1;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-        .file-input-container:hover {
-            background-color: #f8fafc;
-        }
-        .file-input-container input[type="file"] {
-            position: absolute;
+
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
+            max-width: 750px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        .step-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        /* Tùy chỉnh nút chọn file */
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+        #fileName {
+            margin-left: 15px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .sheets-container {
+            display: flex;
+            gap: 20px;
+            min-height: 150px;
+        }
+
+        .sheet-list-panel {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 250px;
+        }
+
+        .rename-panel {
+            flex: 2;
+        }
+
+        .sheet-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .sheet-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .rename-entry {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+        .rename-entry label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+        .rename-entry input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .placeholder {
+            color: #888;
+            font-style: italic;
+        }
+        
+        /* === CSS MỚI CHO Ô NHẬP TÊN FILE === */
+        .filename-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .filename-input-container label {
+            font-weight: 500;
+        }
+        #outputFileName {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .file-extension {
+            color: #666;
+            background-color: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            border-left: none;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body>
+    <div class="container">
+        <h1>Công cụ chuyển đổi Excel cho Dung - By Quý đẹp trai</h1>
 
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <div class="step-box">
+            <h2>Bước 1: Chọn File Excel Nguồn</h2>
+            <input type="file" id="inputFile" accept=".xlsx, .xls">
+            <label for="inputFile" class="file-label">Chọn File...</label>
+            <span id="fileName">Chưa chọn file nào</span>
+        </div>
 
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-900">Các Biểu Mẫu</h1>
-
-        <!-- Biểu mẫu 1: Đăng ký Chứng chỉ “Nhà hoạt động cộng đồng có trách nhiệm” -->
-        <section id="form1" class="bg-white p-6 md:p-8 rounded-xl shadow-lg mb-12">
-            <h2 class="text-2xl font-bold mb-6 text-blue-700 border-b pb-4">Biểu mẫu 1: Đăng ký Chứng chỉ “Nhà hoạt động cộng đồng có trách nhiệm”</h2>
-            <p class="mb-6 text-gray-600">Để đăng ký tham gia chương trình chứng chỉ “Nhà hoạt động cộng đồng có trách nhiệm”, vui lòng điền vào biểu mẫu dưới đây:</p>
-            <form action="#" method="POST">
-                <div class="space-y-6">
-                    <!-- Họ và tên -->
-                    <div>
-                        <label for="form1-name" class="block text-sm font-medium text-gray-700">Họ và tên</label>
-                        <input type="text" id="form1-name" name="name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        <div class="step-box" id="step2Box" style="display: none;">
+            <h2>Bước 2: Chọn/Bỏ chọn trang tính và đổi tên nếu muốn</h2>
+            <div class="sheets-container">
+                <div id="sheetList" class="sheet-list-panel">
                     </div>
-
-                    <!-- Tình trạng làm việc -->
-                    <fieldset>
-                        <legend class="text-sm font-medium text-gray-700">Bạn có phải là cá nhân làm việc độc lập (tự kinh doanh / hộ kinh doanh cá thể, v.v.) không?</legend>
-                        <div class="mt-2 space-y-2">
-                            <div class="flex items-center">
-                                <input id="form1-independent-yes" name="independent" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                <label for="form1-independent-yes" class="ml-3 block text-sm text-gray-700">Có</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="form1-independent-no" name="independent" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                <label for="form1-independent-no" class="ml-3 block text-sm text-gray-700">Không</label>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <!-- Thông tin nếu là cá nhân độc lập -->
-                    <div>
-                        <label for="form1-legal-name" class="block text-sm font-medium text-gray-700">Nếu bạn là cá nhân làm việc độc lập, vui lòng cung cấp tên pháp lý và mã số doanh nghiệp</label>
-                        <input type="text" id="form1-legal-name" name="legal_name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <div id="renameFields" class="rename-panel">
+                    <p class="placeholder">Chọn một hoặc nhiều trang tính từ danh sách bên trái để bắt đầu.</p>
                     </div>
+            </div>
+        </div>
 
-                    <!-- Thông tin nếu không phải cá nhân độc lập -->
-                    <div>
-                        <label for="form1-status" class="block text-sm font-medium text-gray-700">Nếu bạn không phải là cá nhân độc lập, vui lòng ghi rõ tình trạng hiện tại (nhân viên / sinh viên, v.v.) và tên công ty / trường học</label>
-                        <input type="text" id="form1-status" name="status" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <!-- Mạng xã hội -->
-                    <div>
-                        <label for="form1-social" class="block text-sm font-medium text-gray-700">Liên kết đến các nền tảng mạng xã hội chuyên nghiệp của bạn (LinkedIn / Blog, v.v.)</label>
-                        <input type="url" id="form1-social" name="social" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="form1-email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="form1-email" name="email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <!-- Số điện thoại -->
-                    <div>
-                        <label for="form1-phone" class="block text-sm font-medium text-gray-700">Số điện thoại di động</label>
-                        <input type="tel" id="form1-phone" name="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <!-- Mã đối tác -->
-                    <div>
-                        <label for="form1-partner-code" class="block text-sm font-medium text-gray-700">Mã đối tác (nếu có)</label>
-                        <input type="text" id="form1-partner-code" name="partner_code" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <!-- Thương hiệu đã hợp tác -->
-                    <div>
-                        <label for="form1-brands" class="block text-sm font-medium text-gray-700">Kể tên các thương hiệu / nền tảng bạn đã từng hợp tác</label>
-                        <textarea id="form1-brands" name="brands" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <!-- Ví dụ nội dung -->
-                    <div>
-                        <label for="form1-content-example" class="block text-sm font-medium text-gray-700">Nêu ví dụ về nội dung bạn đã tạo thay mặt cho thương hiệu / doanh nghiệp / tổ chức (nếu có, vui lòng đính kèm đường link)</label>
-                        <textarea id="form1-content-example" name="content_example" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-
-                    <!-- Đã đăng ký TRS chưa? -->
-                    <fieldset>
-                        <legend class="text-sm font-medium text-gray-700">Bạn đã từng đăng ký chứng chỉ TRS chưa?</legend>
-                        <div class="mt-2 space-y-2">
-                            <div class="flex items-center">
-                                <input id="form1-trs-yes" name="trs_registered" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                <label for="form1-trs-yes" class="ml-3 block text-sm text-gray-700">Rồi</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="form1-trs-no" name="trs_registered" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                <label for="form1-trs-no" class="ml-3 block text-sm text-gray-700">Chưa</label>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <!-- Cam kết -->
-                    <fieldset>
-                        <legend class="text-base font-medium text-gray-900">Bằng việc đánh dấu các ô dưới đây, bạn cam kết:</legend>
-                        <div class="mt-4 space-y-4">
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input id="form1-commit1" name="commitments[]" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="form1-commit1" class="text-gray-700">Thông tin bạn cung cấp là chính xác.</label>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input id="form1-commit2" name="commitments[]" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="form1-commit2" class="text-gray-700">Bạn chính là người sẽ tham gia học và thi lấy chứng chỉ, và cam kết không ủy quyền cho bất kỳ bên thứ ba nào theo dõi khóa học hoặc tham gia kỳ thi thay.*</label>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input id="form1-commit3" name="commitments[]" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="form1-commit3" class="text-gray-700">Trong trường hợp đạt chứng chỉ, bạn cam kết tuân thủ các Khuyến nghị về đạo đức được thông qua bởi Cơ quan Quản lý Nghề nghiệp trong lĩnh vực Quảng cáo (TRS).</label>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input id="form1-commit4" name="commitments[]" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="form1-commit4" class="text-gray-700">Bạn đã đọc và chấp nhận Điều khoản Dịch vụ Chung của TRS.</label>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mt-4 text-xs text-gray-500">*TRS có quyền xác minh rằng chính bạn là người đạt chứng chỉ thông qua các bài kiểm tra bổ sung hoặc tổ chức các buổi thi trực tiếp trong điều kiện thi thực tế.</p>
-                    </fieldset>
-                </div>
-
-                <!-- Nút gửi -->
-                <div class="mt-8 pt-5">
-                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                        Đăng ký
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <!-- Biểu mẫu 2: Đăng ký Chứng chỉ “Bán hàng xã hội có trách nhiệm” -->
-        <section id="form2" class="bg-white p-6 md:p-8 rounded-xl shadow-lg mb-12">
-            <h2 class="text-2xl font-bold mb-6 text-green-700 border-b pb-4">Biểu mẫu 2: Đăng ký Chứng chỉ “Bán hàng xã hội có trách nhiệm”</h2>
-            <p class="mb-6 text-gray-600">Để đăng ký tham gia chương trình chứng chỉ “Bán hàng xã hội có trách nhiệm”, vui lòng điền vào biểu mẫu dưới đây:</p>
-            <form action="#" method="POST">
-                <div class="space-y-6">
-                    <!-- Họ và tên -->
-                    <div>
-                        <label for="form2-name" class="block text-sm font-medium text-gray-700">Họ và tên</label>
-                        <input type="text" id="form2-name" name="name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="form2-email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="form2-email" name="email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                    </div>
-
-                    <!-- Số điện thoại -->
-                    <div>
-                        <label for="form2-phone" class="block text-sm font-medium text-gray-700">Số điện thoại di động</label>
-                        <input type="tel" id="form2-phone" name="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                    </div>
-                    
-                    <!-- Mã đối tác -->
-                    <div>
-                        <label for="form2-partner-code" class="block text-sm font-medium text-gray-700">Mã đối tác (nếu có)</label>
-                        <input type="text" id="form2-partner-code" name="partner_code" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                    </div>
-
-                    <!-- Mạng xã hội -->
-                    <div>
-                        <label for="form2-social" class="block text-sm font-medium text-gray-700">Liên kết đến các hồ sơ mạng xã hội của bạn</label>
-                        <input type="url" id="form2-social" name="social" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                    </div>
-
-                    <!-- Thương hiệu đã hợp tác -->
-                    <div>
-                        <label for="form2-brands" class="block text-sm font-medium text-gray-700">Kể tên các thương hiệu / nền tảng bạn đã từng hợp tác</label>
-                        <textarea id="form2-brands" name="brands" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
-                    </div>
-                    
-                    <!-- Cam kết -->
-                    <fieldset>
-                        <legend class="text-base font-medium text-gray-900">Bằng việc đánh dấu các ô dưới đây, bạn cam kết:</legend>
-                        <div class="mt-4 space-y-4">
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit1" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit1" class="text-gray-700">Thông tin bạn cung cấp là chính xác.</label></div></div>
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit2" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit2" class="text-gray-700">Bạn chính là người sẽ tham gia học và thi lấy chứng chỉ, và cam kết không ủy quyền cho bất kỳ bên thứ ba nào theo dõi khóa học hoặc tham gia kỳ thi thay.*</label></div></div>
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit3" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit3" class="text-gray-700">Trong trường hợp đạt chứng chỉ, bạn cam kết tuân thủ các Khuyến nghị về đạo đức được thông qua bởi Cơ quan Quản lý Nghề nghiệp trong lĩnh vực Quảng cáo (TRS).</label></div></div>
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit4" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit4" class="text-gray-700">Bạn hiện không bị điều tra hay truy tố liên quan đến hành vi kinh doanh không lành mạnh hoặc bất kỳ hành vi quảng cáo/khuyến mãi bất hợp pháp nào.</label></div></div>
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit5" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit5" class="text-gray-700">Lượng người theo dõi của bạn không bao gồm tỷ lệ đáng kể các tài khoản giả mạo ("người theo dõi ảo").</label></div></div>
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit6" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit6" class="text-gray-700">Bạn đồng ý rằng TRS có quyền từ chối đơn đăng ký chứng chỉ nếu phát hiện bạn đã có hành vi vi phạm nghiêm trọng hoặc đáng kể các quy tắc đạo đức của ngành nghề trong các hoạt động truyền thông trước khi nộp đơn.</label></div></div>
-                            <div class="flex items-start"><div class="flex items-center h-5"><input id="form2-commit7" type="checkbox" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded"></div><div class="ml-3 text-sm"><label for="form2-commit7" class="text-gray-700">Bạn đã đọc và chấp nhận Điều khoản Dịch vụ Chung của TRS.</label></div></div>
-                        </div>
-                        <p class="mt-4 text-xs text-gray-500">*TRS có quyền xác minh rằng chính bạn là người đạt chứng chỉ thông qua các bài kiểm tra bổ sung hoặc tổ chức các buổi thi trực tiếp trong điều kiện thi thực tế.</p>
-                    </fieldset>
-                </div>
-
-                <!-- Nút gửi -->
-                <div class="mt-8 pt-5">
-                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                        Đăng ký
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <!-- Biểu mẫu 3: Gửi Khiếu Nại -->
-        <section id="form3" class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-            <h2 class="text-2xl font-bold mb-6 text-red-700 border-b pb-4">Biểu mẫu Gửi Khiếu Nại</h2>
-            <p class="mb-6 text-gray-600">Các trường được đánh dấu <span class="text-red-500">*</span> là bắt buộc phải điền.</p>
-            <form action="#" method="POST" enctype="multipart/form-data">
-                <div class="space-y-6">
-                    <!-- Loại người gửi -->
-                    <fieldset>
-                        <legend class="text-sm font-medium text-gray-700">Bạn là cá nhân hay pháp nhân?</legend>
-                        <div class="mt-2 space-y-2">
-                            <div class="flex items-center"><input id="form3-individual" name="entity_type" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"><label for="form3-individual" class="ml-3 block text-sm text-gray-700">Tôi là cá nhân</label></div>
-                            <div class="flex items-center"><input id="form3-legal" name="entity_type" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"><label for="form3-legal" class="ml-3 block text-sm text-gray-700">Tôi là pháp nhân (doanh nghiệp, hiệp hội, tổ chức công đoàn, cơ quan nhà nước, v.v.)</label></div>
-                        </div>
-                    </fieldset>
-                    
-                    <!-- Thông tin cá nhân -->
-                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                        <div><label for="form3-last-name" class="block text-sm font-medium text-gray-700">Họ <span class="text-red-500">*</span></label><input type="text" id="form3-last-name" name="last_name" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                        <div><label for="form3-first-name" class="block text-sm font-medium text-gray-700">Tên <span class="text-red-500">*</span></label><input type="text" id="form3-first-name" name="first_name" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                        <div class="sm:col-span-2"><label for="form3-email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label><input type="email" id="form3-email" name="email" required placeholder="Vui lòng nhập một địa chỉ email hợp lệ (ví dụ: ban@nhacungcap.com)" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                        <div class="sm:col-span-2"><label for="form3-address" class="block text-sm font-medium text-gray-700">Địa chỉ <span class="text-red-500">*</span></label><input type="text" id="form3-address" name="address" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                        <div><label for="form3-postal-code" class="block text-sm font-medium text-gray-700">Mã bưu chính <span class="text-red-500">*</span></label><input type="text" id="form3-postal-code" name="postal_code" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                        <div><label for="form3-city" class="block text-sm font-medium text-gray-700">Thành phố <span class="text-red-500">*</span></label><input type="text" id="form3-city" name="city" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                    </div>
-
-                    <!-- Thông tin quảng cáo -->
-                    <div class="pt-6 border-t border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">Thông tin về quảng cáo bị khiếu nại</h3>
-                        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                            <div class="sm:col-span-2"><label for="form3-advertiser" class="block text-sm font-medium text-gray-700">Tên nhà quảng cáo / công ty / thương hiệu <span class="text-red-500">*</span></label><input type="text" id="form3-advertiser" name="advertiser" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                            <div class="sm:col-span-2"><label for="form3-product" class="block text-sm font-medium text-gray-700">Tên sản phẩm hoặc dịch vụ liên quan đến quảng cáo <span class="text-red-500">*</span></label><input type="text" id="form3-product" name="product" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                            
-                            <div class="sm:col-span-2">
-                                <label for="form3-media-type" class="block text-sm font-medium text-gray-700">Loại phương tiện mà quảng cáo được phát sóng <span class="text-red-500">*</span></label>
-                                <select id="form3-media-type" name="media_type" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                                    <option>Truyền hình</option>
-                                    <option>Báo chí</option>
-                                    <option>Áp phích / biển quảng cáo</option>
-                                    <option>Đài phát thanh</option>
-                                    <option>Rạp chiếu phim</option>
-                                    <option>Internet</option>
-                                    <option>Quảng cáo trên thiết bị di động (điện thoại)</option>
-                                    <option>Quảng cáo tại điểm bán hàng (POS/PLV)</option>
-                                    <option>Gửi thư quảng cáo</option>
-                                    <option>Khác</option>
-                                </select>
-                            </div>
-
-                            <fieldset class="sm:col-span-2">
-                                <legend class="text-sm font-medium text-gray-700">Quốc tịch của phương tiện truyền thông <span class="text-red-500">*</span></legend>
-                                <div class="mt-2 flex items-center space-x-6">
-                                    <div class="flex items-center"><input id="form3-nat-vn" name="media_nationality" type="radio" required class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"><label for="form3-nat-vn" class="ml-3 block text-sm text-gray-700">Việt Nam</label></div>
-                                    <div class="flex items-center"><input id="form3-nat-other" name="media_nationality" type="radio" required class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300"><label for="form3-nat-other" class="ml-3 block text-sm text-gray-700">Khác</label></div>
-                                </div>
-                            </fieldset>
-
-                            <div class="sm:col-span-2"><label for="form3-ad-location" class="block text-sm font-medium text-gray-700">Bạn đã thấy hoặc phát hiện quảng cáo này ở đâu? <span class="text-red-500">*</span></label><textarea id="form3-ad-location" name="ad_location" rows="3" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" placeholder="Vui lòng nêu rõ tên ấn phẩm / kênh truyền hình / đài phát thanh / rạp chiếu phim / trang web (và URL nếu có) / đơn vị quảng cáo..."></textarea></div>
-                            <div class="sm:col-span-2"><label for="form3-ad-time" class="block text-sm font-medium text-gray-700">Bạn đã thấy quảng cáo này vào thời điểm nào? <span class="text-red-500">*</span></label><input type="text" id="form3-ad-time" name="ad_time" required placeholder="định dạng ngày: ngày/tháng/năm" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></div>
-                            <div class="sm:col-span-2"><label for="form3-ad-description" class="block text-sm font-medium text-gray-700">Mô tả quảng cáo <span class="text-red-500">*</span></label><textarea id="form3-ad-description" name="ad_description" rows="4" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea></div>
-                            <div class="sm:col-span-2"><label for="form3-complaint-reason" class="block text-sm font-medium text-gray-700">Lý do khiếu nại <span class="text-red-500">*</span></label><textarea id="form3-complaint-reason" name="complaint_reason" rows="4" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea></div>
-                        </div>
-                    </div>
-
-                    <!-- Tệp đính kèm -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tệp đính kèm minh chứng (tối đa 4 tệp)</label>
-                        <div class="mt-2 file-input-container">
-                            <input type="file" name="attachments" multiple>
-                            <div class="text-gray-500">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                                <p class="mt-2">Kéo và thả các tệp vào đây hoặc <span class="font-medium text-red-600">chọn từ thiết bị</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Xử lý khẩn cấp -->
-                    <fieldset>
-                        <legend class="text-sm font-medium text-gray-700">Yêu cầu xử lý khẩn cấp</legend>
-                        <p class="text-xs text-gray-500">(Chỉ áp dụng trong trường hợp đặc biệt theo quy định)</p>
-                        <div class="mt-2">
-                            <div class="flex items-center"><input id="form3-urgent" name="urgent" type="checkbox" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"><label for="form3-urgent" class="ml-3 block text-sm text-gray-700">Có</label></div>
-                        </div>
-                    </fieldset>
-
-                    <!-- Bảo vệ dữ liệu -->
-                    <div>
-                        <h3 class="text-base font-medium text-gray-900">Lưu ý về bảo vệ dữ liệu cá nhân</h3>
-                        <p class="mt-2 text-sm text-gray-600">
-                            Khi bạn gửi đơn khiếu nại này, bạn đồng ý rằng chúng tôi sẽ xử lý dữ liệu cá nhân được cung cấp trong biểu mẫu nhằm mục đích xử lý khiếu nại của bạn. Việc này được thực hiện theo Luật An ninh mạng 2018, Nghị định 13/2023/NĐ‑CP (có hiệu lực từ ngày 1/7/2023), và Luật Bảo vệ dữ liệu cá nhân, được Quốc hội thông qua ngày 26/6/2025, có hiệu lực từ ngày 1/1/2026.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Nút gửi -->
-                <div class="mt-8 pt-5">
-                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
-                        Gửi Khiếu Nại
-                    </button>
-                </div>
-            </form>
-        </section>
+        <div class="step-box" id="step3Box" style="display: none;">
+            <h2>Bước 3: Chuyển đổi và Lưu</h2>
+            
+            <div class="filename-input-container">
+                <label for="outputFileName">Tên file xuất ra:</label>
+                <input type="text" id="outputFileName" value="Output_Data">
+                <span class="file-extension">.xlsx</span>
+            </div>
+            
+            <button id="processButton" disabled>Chuyển đổi và Tải File Xuống</button>
+            <div id="status"></div>
+        </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const inputFile = document.getElementById('inputFile');
+            const fileNameSpan = document.getElementById('fileName');
+            const step2Box = document.getElementById('step2Box');
+            const step3Box = document.getElementById('step3Box');
+            const sheetListDiv = document.getElementById('sheetList');
+            const renameFieldsDiv = document.getElementById('renameFields');
+            const processButton = document.getElementById('processButton');
+            const statusDiv = document.getElementById('status');
+            // === JS MỚI: LẤY Ô NHẬP TÊN FILE ===
+            const outputFileNameInput = document.getElementById('outputFileName');
+
+            let workbook = null;
+            let selectedSheets = {};
+
+            inputFile.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                fileNameSpan.textContent = file.name;
+                statusDiv.textContent = 'Đang đọc file...';
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        workbook = XLSX.read(data, { type: 'array' });
+                        
+                        step2Box.style.display = 'block';
+                        step3Box.style.display = 'block';
+                        
+                        displaySheets(workbook.SheetNames);
+                        statusDiv.textContent = '';
+                    } catch (err) {
+                        statusDiv.textContent = `Lỗi đọc file: ${err.message}`;
+                        statusDiv.style.color = 'red';
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            function displaySheets(sheetNames) {
+                sheetListDiv.innerHTML = '';
+                sheetNames.forEach(name => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'sheet-item';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `sheet-${name}`;
+                    checkbox.value = name;
+                    checkbox.addEventListener('change', updateRenameFields);
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `sheet-${name}`;
+                    label.textContent = name;
+
+                    itemDiv.appendChild(checkbox);
+                    itemDiv.appendChild(label);
+                    sheetListDiv.appendChild(itemDiv);
+                });
+                updateRenameFields();
+            }
+
+            function updateRenameFields() {
+                renameFieldsDiv.innerHTML = '';
+                selectedSheets = {};
+
+                const checkedBoxes = sheetListDiv.querySelectorAll('input[type="checkbox"]:checked');
+
+                if (checkedBoxes.length === 0) {
+                    renameFieldsDiv.innerHTML = '<p class="placeholder">Chọn một hoặc nhiều trang tính từ danh sách bên trái để bắt đầu.</p>';
+                    processButton.disabled = true;
+                    return;
+                }
+
+                checkedBoxes.forEach(box => {
+                    const sheetName = box.value;
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'rename-entry';
+
+                    const label = document.createElement('label');
+                    label.textContent = `${sheetName} →`;
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = sheetName;
+                    
+                    entryDiv.appendChild(label);
+                    entryDiv.appendChild(input);
+                    renameFieldsDiv.appendChild(entryDiv);
+                    
+                    selectedSheets[sheetName] = input;
+                });
+                
+                processButton.disabled = false;
+            }
+
+            processButton.addEventListener('click', () => {
+                if (!workbook || Object.keys(selectedSheets).length === 0) {
+                    alert("Vui lòng chọn file và ít nhất một trang tính.");
+                    return;
+                }
+
+                statusDiv.textContent = '⏳ Đang xử lý...';
+                processButton.disabled = true;
+
+                setTimeout(() => {
+                    try {
+                        const allDataFrames = [];
+                        const sheetNamesToProcess = Object.keys(selectedSheets);
+
+                        for (const sheetName of sheetNamesToProcess) {
+                            const ws = workbook.Sheets[sheetName];
+                            const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+                            
+                            if (data.length < 2) continue;
+
+                            const categoryKeywords = {};
+
+                            for (let i = 1; i < data.length; i++) {
+                                const row = data[i];
+                                const keyword = String(row[0] || '').trim();
+                                if (!keyword) continue;
+
+                                for (let j = 3; j < row.length; j++) {
+                                    const category = String(row[j] || '').trim();
+                                    if (category) {
+                                        if (!categoryKeywords[category]) {
+                                            categoryKeywords[category] = new Set();
+                                        }
+                                        categoryKeywords[category].add(keyword);
+                                    }
+                                }
+                            }
+
+                            if (Object.keys(categoryKeywords).length === 0) continue;
+
+                            const fixed_order = [
+                                "Funny Meme", "Gif", "Entertainment", "Sports", "Cat", "Dog", "Animal",
+                                "Game", "Love", "Emoji", "Quotes", "President", "Anime", "Food"
+                            ];
+                            const finalData = [];
+                            const processedCategories = new Set();
+
+                            fixed_order.forEach(categoryName => {
+                                if (categoryKeywords[categoryName]) {
+                                    const keywordString = Array.from(categoryKeywords[categoryName]).sort().join(', ');
+                                    finalData.push({ Category: categoryName, Keyword: keywordString });
+                                    processedCategories.add(categoryName);
+                                }
+                            });
+
+                            const remainingCategories = Object.keys(categoryKeywords)
+                                .filter(cat => !processedCategories.has(cat))
+                                .sort();
+
+                            remainingCategories.forEach(categoryName => {
+                                const keywordString = Array.from(categoryKeywords[categoryName]).sort().join(', ');
+                                finalData.push({ Category: categoryName, Keyword: keywordString });
+                            });
+                            
+                            const newSheetName = selectedSheets[sheetName].value.trim();
+                            const outputData = finalData.map(row => ({
+                                Country: newSheetName,
+                                ...row
+                            }));
+
+                            allDataFrames.push(...outputData);
+                        }
+
+                        if (allDataFrames.length === 0) {
+                            statusDiv.textContent = 'Hoàn tất. Không có dữ liệu hợp lệ để xử lý.';
+                            processButton.disabled = false;
+                            return;
+                        }
+
+                        const newWB = XLSX.utils.book_new();
+                        const newWS = XLSX.utils.json_to_sheet(allDataFrames);
+
+                        const merges = [];
+                        if (allDataFrames.length > 0) {
+                            let startRow = 1;
+                            for (let i = 1; i < allDataFrames.length; i++) {
+                                if (allDataFrames[i].Country !== allDataFrames[i - 1].Country) {
+                                    if (i - startRow > 0) {
+                                       merges.push({ s: { r: startRow, c: 0 }, e: { r: i, c: 0 } });
+                                    }
+                                    startRow = i + 1;
+                                }
+                            }
+                            merges.push({ s: { r: startRow, c: 0 }, e: { r: allDataFrames.length, c: 0 } });
+                        }
+                        
+                        newWS['!merges'] = merges;
+                        
+                        XLSX.utils.book_append_sheet(newWB, newWS, 'Transformed_Data');
+                        
+                        // === JS MỚI: LẤY TÊN FILE VÀ TẢI VỀ ===
+                        let outputName = outputFileNameInput.value.trim();
+                        if (!outputName) {
+                            outputName = 'Output_Data'; // Tên mặc định nếu người dùng xóa hết
+                        }
+                        const finalFileName = `${outputName}.xlsx`;
+                        
+                        XLSX.writeFile(newWB, finalFileName);
+
+                        statusDiv.innerHTML = `✅ Thành công! File <strong>${finalFileName}</strong> đã được tải xuống.`;
+                        statusDiv.style.color = 'green';
+                    
+                    } catch (err) {
+                        statusDiv.textContent = `Lỗi xử lý: ${err.message}`;
+                        statusDiv.style.color = 'red';
+                        console.error(err);
+                    } finally {
+                        processButton.disabled = false;
+                    }
+                }, 100);
+            });
+        });
+    </script>
 </body>
 </html>
